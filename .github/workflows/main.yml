@@ -1,0 +1,40 @@
+name: Deploy Docs
+
+on: [push]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Setup
+        env:
+          ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
+          TZ: Asia/Shanghai
+        run: |
+          # set up private key for deploy
+          mkdir -p ~/.ssh/
+          echo "$ACTION_DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          # set git information
+          git config --global user.name 'kitety' 
+          git config --global user.email 'aizaizuori@foxmail.com'
+          npm install
+
+      - name: Deploy
+        run: |
+          # publish my blog
+          sudo rm -rf docs
+          npm run build-storybook
+          git add .
+          git commit -m "docs: build docs"
+          git push
