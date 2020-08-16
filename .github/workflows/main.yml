@@ -1,40 +1,19 @@
-name: Deploy Docs
-
-on: [push]
-
+name: GitHub Actions Build and Deploy Demo
+on:
+  push:
+    branches:
+      - master
 jobs:
-  publish:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
+    - name: Checkout
+      uses: actions/checkout@master
 
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: "14.x"
-
-      - name: Setup
-        env:
-          ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
-          TZ: Asia/Shanghai
-        run: |
-          # set up private key for deploy
-          mkdir -p ~/.ssh/
-          echo "$ACTION_DEPLOY_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          # set git information
-          git config --global user.name 'kitety' 
-          git config --global user.email 'aizaizuori@foxmail.com'
-          npm install
-
-      - name: Deploy
-        run: |
-          # publish my blog
-          sudo rm -rf docs
-          npm run build-storybook
-          git add .
-          git commit -m "docs: build docs"
-          git push origin HEAD:master
+    - name: Build and Deploy
+      uses: JamesIves/github-pages-deploy-action@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: docs
+        BUILD_SCRIPT: npm install && npm run build-storybook
