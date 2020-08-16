@@ -37,4 +37,4 @@ jobs:
           npm run build-storybook
           git add .
           git commit -m "docs: build docs"
-          git push
+          git push origin HEAD:master
