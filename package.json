@@ -1,11 +1,11 @@
 {
-  "name": "kui",
+  "name": "kitety-ui",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://kitety.github.io/kitety-ui",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
+    "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.1.2",
     "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
@@ -23,6 +23,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "coverage": "react-scripts test --coverage --watchAll=false",
+    "view coverage": "npm run coverage && npx http-server ./coverage",
     "storybook": "start-storybook -p 6006 -s public",
     "storybook-docs": "start-storybook --docs",
     "build-storybook": "build-storybook -s public -o docs"
@@ -90,5 +92,12 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "!src/**/*.stories.tsx",
+      "src/**/*.tsx",
+      "!src/**/*.snap"
+    ]
   }
 }

@@ -50,6 +50,10 @@ export const SIZES: sizeObj = {
 };
 export type SizesTypes = keyof typeof SIZES;
 
+export const btnPadding: { small: string; medium: string } = {
+  small: '8px 16px',
+  medium: '13px 20px',
+};
 // 内部和loading样式
 const Text = styled.span`
   display: inline-block;
@@ -437,7 +441,7 @@ function Button(props: PropsWithChildren<ButtonProps>) {
     return undefined;
   }, [isLink]);
   return (
-    <StyledButton as={btnType} {...props}>
+    <StyledButton data-testid="button" as={btnType} {...props}>
       {buttonInner}
     </StyledButton>
   );
