@@ -24,7 +24,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "coverage": "react-scripts test --coverage --watchAll=false",
-    "view coverage": "npm run coverage && npx http-server ./coverage",
+    "view-coverage": "npm run coverage && npx http-server ./coverage",
     "storybook": "start-storybook -p 6006 -s public",
     "storybook-docs": "start-storybook --docs",
     "build-storybook": "build-storybook -s public -o docs"
