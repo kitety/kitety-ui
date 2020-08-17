@@ -17,6 +17,7 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
+    "commit": "git-cz",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -42,6 +43,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.2",
     "@storybook/addon-a11y": "^6.0.7",
     "@storybook/addon-actions": "^6.0.7",
     "@storybook/addon-docs": "^6.0.7",
@@ -54,8 +57,36 @@
     "@storybook/preset-create-react-app": "^3.1.4",
     "@storybook/react": "^6.0.7",
     "@types/styled-components": "^5.1.2",
+    "@umijs/fabric": "^2.2.2",
     "babel-loader": "^8.1.0",
+    "commitizen": "^4.1.2",
+    "cz-conventional-changelog": "^3.2.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
     "react-is": "^16.13.1",
     "styled-components": "^5.1.1"
+  },
+  "lint-staged": {
+    "components/**/*.ts?(x)": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ],
+    "components/**/*.less": [
+      "stylelint --syntax less --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
