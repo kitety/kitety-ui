@@ -101,6 +101,8 @@ const StyledButton = styled.button<ButtonProps>`
   opacity: 1;
   margin: 0;
   background: transparent;
+
+
   font-size: ${(props) => (props.size === SIZES.small ? typography.size.s1 : typography.size.s2)}px;
   font-weight: ${typography.weight.extrabold};
   line-height: 1;
@@ -420,7 +422,6 @@ const StyledButton = styled.button<ButtonProps>`
       `};
 
 `;
-
 function Button(props: PropsWithChildren<ButtonProps>) {
   const { isLoading, loadingText, isLink, children } = props;
   const buttonInner = (
