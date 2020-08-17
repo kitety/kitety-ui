@@ -42,7 +42,7 @@ export const background = {
 export const typography = {
   type: {
     primary: '"Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif',
-    //书写字体
+    // 书写字体
     code: '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace',
   },
   weight: {
