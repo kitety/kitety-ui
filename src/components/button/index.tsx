@@ -89,6 +89,7 @@ export type ButtonProps = CustomButtonProps &
 // 自定义属性必须导出，必须按此格式写注释，这种写法会被docgen插件捕获从而显示到属性页面上。
 const StyledButton = styled.button<ButtonProps>`
   border: 0;
+  outline: none;
   border-radius: 3em;
   cursor: pointer;
   display: inline-block;
