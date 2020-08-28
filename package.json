@@ -1,6 +1,6 @@
 {
   "name": "kitety-ui",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "private": false,
   "homepage": "https://kitety.github.io/kitety-ui",
   "author": "kitety",
@@ -32,7 +32,8 @@
     ]
   },
   "dependencies": {
-    "polished": "^3.6.5"
+    "polished": "^3.6.5",
+    "styled-components": "^5.1.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -72,8 +73,7 @@
   },
   "peerDependencies": {
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "styled-components": "^5.1.1"
+    "react-dom": ">=16.8.0"
   },
   "lint-staged": {
     "components/**/*.ts?(x)": [
@@ -106,5 +106,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "sideEffects": false,
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts"
 }
