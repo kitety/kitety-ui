@@ -17,7 +17,8 @@
     "view-coverage": "npm run coverage && npx http-server ./coverage",
     "storybook": "start-storybook -p 6006 -s public",
     "storybook-docs": "start-storybook --docs",
-    "build-storybook": "build-storybook -s public -o docs"
+    "build-storybook": "build-storybook -s public -o docs",
+    "coverall": "npm run coverage  && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "eslintConfig": {
     "extends": "react-app"
