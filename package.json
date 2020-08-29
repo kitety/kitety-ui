@@ -1,8 +1,11 @@
 {
-  "name": "kitety-ui",
+  "name": "@kitety/kitety-ui",
   "version": "1.0.4",
   "private": false,
   "homepage": "https://kitety.github.io/kitety-ui",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@kitety"
+  },
   "author": "kitety",
   "scripts": {
     "commit": "git-cz",
