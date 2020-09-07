@@ -41,7 +41,9 @@
     "styled-components": "^5.1.1"
   },
   "dependencies": {
-    "polished": "^3.6.5"
+    "global": "^4.4.0",
+    "polished": "^3.6.5",
+    "yrm": "^1.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
