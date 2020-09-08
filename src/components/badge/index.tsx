@@ -1,5 +1,5 @@
-import React, { PropsWithChildren, ReactNode, useMemo } from 'react';
-import styled from 'styled-components';
+import React, { PropsWithChildren, ReactNode, useMemo, HTMLAttributes } from 'react';
+import styled, { css } from 'styled-components';
 import { color, typography, background } from '../shared/style';
 import { darken, rgba, opacify } from 'polished';
 import { easing } from '../shared/animation';
@@ -38,10 +38,42 @@ const BadgeWrapper = styled.div<BadgeProps>`
     margin-top: -2px;
     margin-right: 4px;
   }
-  ${props=>props.status}
+  ${(props) =>
+    props.status === 'positive' &&
+    css`
+      color: ${badgeColor.positive};
+      background: ${badgeBackground.positive};
+    `}
+  ${(props) =>
+    props.status === 'negative' &&
+    css`
+      color: ${badgeColor.negative};
+      background: ${badgeBackground.negative};
+    `}
+  ${(props) =>
+    props.status === 'warning' &&
+    css`
+      color: ${badgeColor.warning};
+      background: ${badgeBackground.warning};
+    `}
+  ${(props) =>
+    props.status === 'error' &&
+    css`
+      color: ${badgeColor.error};
+      background: ${badgeBackground.error};
+    `}
+  ${(props) =>
+    props.status === 'neutral' &&
+    css`
+      color: ${badgeColor.neutral};
+      background: ${badgeBackground.neutral};
+    `}
 `;
 
-export function badge(props: PropsWithChildren<BadgeProps>) {
-  const { children } = props;
-  return <div></div>;
+export function Badge(props: PropsWithChildren<BadgeProps>) {
+  return <BadgeWrapper {...props} />;
 }
+Badge.defaultProps={
+  status: 'neutral'
+}
+export default Badge;

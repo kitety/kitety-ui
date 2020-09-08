@@ -2,7 +2,7 @@ module.exports = function (plop) {
   // controller generator
   plop.addHelper('headCaps', function (p) {
     p = p.trim();
-    return p;
+    return p.slice(0, 1).toUpperCase() + p.slice(1);
   });
   plop.setGenerator('component', {
     description: 'create component',
