@@ -16,7 +16,7 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages
         FOLDER: docs
-        BUILD_SCRIPT: npm install && npm run build-storybook
+        BUILD_SCRIPT:  yarn install && npm run build-storybook
     - name: Coveralls
       env:
         COVERALLS_SERVICE_NAME: 'GitHub CI'
