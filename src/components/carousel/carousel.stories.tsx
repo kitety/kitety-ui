@@ -10,7 +10,7 @@ export default {
 
 export const demo = () => (
   <div>
-    <Carousel autoplay speed={20}>
+    <Carousel autoplay speed={1000}>
       <div style={{ height: '100%', width: '100%', background: 'red' }}>1</div>
       <div style={{ height: '100%', width: '100%', background: 'blue' }}>2</div>
       <div style={{ height: '100%', width: '100%', background: 'yellow' }}>3</div>
@@ -59,7 +59,7 @@ export const knobsCarousel = () => {
         autoplay={boolean('autoplay', true)}
         viewportBoxshadow={text('viewportBoxshadow', '2px 2px 4px #d9d9d9')}
         autoplayReverse={boolean('autoplayReverse', false)}
-        speed={number('speed', 500)}
+        speed={number('speed', 1000)}
         autoplayDelay={number('autoplayDelay', 5000)}
       >
         {new Array(4).fill(300).map((v, i) => DivElement(v, i))}
