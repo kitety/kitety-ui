@@ -1,6 +1,7 @@
 import React from 'react';
-import { Carousel } from './';
-import { withKnobs, text, boolean, color, select, number } from '@storybook/addon-knobs';
+import { Carousel } from './index';
+import { withKnobs, text, boolean, select, number } from '@storybook/addon-knobs';
+import { color } from '../shared/style';
 
 export default {
   title: 'Carousel',
@@ -8,23 +9,13 @@ export default {
   decorators: [withKnobs],
 };
 
-export const demo = () => (
-  <div>
-    <Carousel autoplay speed={1000}>
-      <div style={{ height: '100%', width: '100%', background: 'red' }}>1</div>
-      <div style={{ height: '100%', width: '100%', background: 'blue' }}>2</div>
-      <div style={{ height: '100%', width: '100%', background: 'yellow' }}>3</div>
-      <div style={{ height: '100%', width: '100%' }}>4</div>
-    </Carousel>
-  </div>
-);
-const DivElement = (height: number, index: number) => {
+const DivExample = function (height: number, index: number) {
   return (
     <div
+      key={index}
       style={{
         background: '#364d79',
       }}
-      key={index}
     >
       <span
         style={{
@@ -42,28 +33,27 @@ const DivElement = (height: number, index: number) => {
     </div>
   );
 };
+
 export const knobsCarousel = () => {
   const height = number('height', 300);
   const num = number('item number', 4);
   return (
-    <div>
-      <Carousel
-        delay={number('delay', 300)}
-        height={height}
-        radioAppear={select(
-          'radioAppear',
-          Object.keys(color) as Array<keyof typeof color>,
-          'primary',
-        )}
-        defaultIndex={number('defaultIndex', 0)}
-        autoplay={boolean('autoplay', true)}
-        viewportBoxshadow={text('viewportBoxshadow', '2px 2px 4px #d9d9d9')}
-        autoplayReverse={boolean('autoplayReverse', false)}
-        speed={number('speed', 1000)}
-        autoplayDelay={number('autoplayDelay', 5000)}
-      >
-        {new Array(4).fill(300).map((v, i) => DivElement(v, i))}
-      </Carousel>
-    </div>
+    <Carousel
+      delay={number('delay', 300)}
+      height={height}
+      radioAppear={select(
+        'radioAppear',
+        Object.keys(color) as Array<keyof typeof color>,
+        'primary',
+      )}
+      defaultIndex={number('defaultIndex', 0)}
+      autoplay={boolean('autoplay', true)}
+      viewportBoxshadow={text('viewportBoxshadow', '2px 2px 4px #d9d9d9')}
+      autoplayReverse={boolean('autoplayReverse', false)}
+      animationDelay={number('animationDelay', 500)}
+      autoplayDelay={number('autoplayDelay', 5000)}
+    >
+      {new Array(num).fill(height).map((v, i) => DivExample(v, i))}
+    </Carousel>
   );
 };
