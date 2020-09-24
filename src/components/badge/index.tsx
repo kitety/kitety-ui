@@ -1,8 +1,6 @@
-import React, { PropsWithChildren, ReactNode, useMemo, HTMLAttributes } from 'react';
+import React, { PropsWithChildren, HTMLAttributes } from 'react';
 import styled, { css } from 'styled-components';
 import { color, typography, background } from '../shared/style';
-import { darken, rgba, opacify } from 'polished';
-import { easing } from '../shared/animation';
 
 export interface BadgeProps extends HTMLAttributes<HTMLDivElement> {
   status: 'positive' | 'negative' | 'neutral' | 'warning' | 'error';
@@ -73,7 +71,7 @@ const BadgeWrapper = styled.div<BadgeProps>`
 export function Badge(props: PropsWithChildren<BadgeProps>) {
   return <BadgeWrapper {...props} />;
 }
-Badge.defaultProps={
-  status: 'neutral'
-}
+Badge.defaultProps = {
+  status: 'neutral',
+};
 export default Badge;
