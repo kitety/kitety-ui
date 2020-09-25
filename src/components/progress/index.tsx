@@ -186,7 +186,7 @@ export function Progress(props: PropsWithChildren<ProgressProps>) {
               }}
             ></circle>
           </svg>
-          <CircleText size={size!}>{progressText || `${state}%`}</CircleText>
+          <CircleText size={size!}>{progressText || circleText || `${state}%`}</CircleText>
         </CircleWrapper>
       );
     } else {

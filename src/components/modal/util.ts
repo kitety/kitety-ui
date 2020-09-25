@@ -1,18 +1,22 @@
 import { useMemo, useState } from 'react';
 
-export function useStateAnimation(parentSetState: (v: boolean) => void, delay: number = 300) {
+export function useStateAnimation(
+  parentSetState: (v: boolean) => void,
+  delay: number = 300,
+): [boolean, (v: boolean) => void, () => void] {
   const [state, setState] = useState(true);
   const [innerClose, unmount] = useMemo(() => {
     let timer: number;
     let innerClose = (v: boolean) => {
       setState(v);
       timer = window.setTimeout(() => {
-        parentSetState(v), setState(true);
+        parentSetState(v);
+        setState(true);
       }, delay);
     };
     let unmount = () => window.clearTimeout(timer);
     return [innerClose, unmount];
-  }, [setState, parentSetState, delay]);
+  }, [state, parentSetState, delay]);
   return [state, innerClose, unmount];
 }
 
