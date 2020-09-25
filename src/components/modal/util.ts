@@ -16,7 +16,7 @@ export function useStateAnimation(
     };
     let unmount = () => window.clearTimeout(timer);
     return [innerClose, unmount];
-  }, [state, parentSetState, delay]);
+  }, [setState, parentSetState, delay]);
   return [state, innerClose, unmount];
 }
 

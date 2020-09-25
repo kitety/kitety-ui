@@ -1,4 +1,11 @@
-import React, { CSSProperties, PropsWithChildren, ReactNode, useEffect, useMemo, useRef, } from 'react';
+import React, {
+  CSSProperties,
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import styled, { css, keyframes } from 'styled-components';
 import { typography } from '../shared/style';
 
@@ -31,7 +38,6 @@ export const modalCloseAnimate = keyframes`
   }
 `;
 
-
 const ModalWrapper = styled.div`
   top: 0;
   left: 0;
@@ -55,8 +61,16 @@ const ModalViewPort = styled.div<{ visible: boolean; delay: number }>`
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   width: 30%;
   z-index: 1001;
-  ${(props) => props.visible && css`animation: ${modalOpenAnimate} ${props.delay / 1000}s ease-in`}
-  ${(props) => !props.visible && css`animation: ${modalCloseAnimate} ${props.delay / 1000}s ease-in`}
+  ${(props) =>
+    props.visible &&
+    css`
+      animation: ${modalOpenAnimate} ${props.delay / 1000}s ease-in;
+    `}
+  ${(props) =>
+    !props.visible &&
+    css`
+      animation: ${modalCloseAnimate} ${props.delay / 1000}s ease-in;
+    `}
 `;
 
 const ModalMask = styled.div`
@@ -105,9 +119,9 @@ export type ModalProps = {
   /** 改变取消按钮文本 */
   cancelText?: ReactNode | string;
   /** 点了确认的回调，如果传了，需要自行处理关闭 */
-  onOk?: (set: (v: boolean) => void) => void
+  onOk?: (set: (v: boolean) => void) => void;
   /** 点了取消的回调，如果传了，需要自行处理关闭 */
-  onCancel?: (set: (v: boolean) => void) => void
+  onCancel?: (set: (v: boolean) => void) => void;
   /** 点确认或者取消都会走的回调 */
   callback?: (v: boolean) => void;
   /** 点击mask是否关闭模态框 */
@@ -131,45 +145,91 @@ export type ModalProps = {
 };
 
 export function Modal(props: PropsWithChildren<ModalProps>) {
-  const { visible, maskClose, closeButton, delay, mask, container = document.body, confirm, okText, cancelText, style, onOk, onCancel, title, parentSetState, stopScroll, portalStyle, refCallback, closeCallback, callback } = props
+  const {
+    visible,
+    maskClose,
+    closeButton,
+    delay,
+    mask,
+    container = document.body,
+    confirm,
+    okText,
+    cancelText,
+    style,
+    onOk,
+    onCancel,
+    title,
+    parentSetState = (v: boolean) => {},
+    stopScroll,
+    portalStyle,
+    refCallback,
+    closeCallback,
+    callback,
+  } = props;
   const ref = useRef<HTMLDivElement>(null);
-  const [state, setState, unmount] = useStateAnimation(parentSetState, delay)
+  const [state, setState, unmount] = useStateAnimation(parentSetState, delay);
   const render = useMemo(() => {
     if (!visible) {
-      unmount()
-      return null
+      unmount();
+      return null;
     } else {
-      return createPortal(<ModalWrapper ref={ref} style={portalStyle}>
-        <ModalViewPort style={style} visible={state} delay={delay!}>
-          <div>
-            {title && <TitleWrapper>{title}</TitleWrapper>}
-            {closeButton && <CloseBtn>
-              <Button style={{ background: '#fff', borderRadius: '5px', padding: '5px' }} onClick={() => {
-                setState(false);
-                closeCallback?.();
-              }}><Icon icon="closeAlt" /></Button>
-            </CloseBtn>
-            }
-          </div>
-          {<ChildrenWrapper>{props.children}</ChildrenWrapper>}
-          {confirm && <ConfirmWrapper>
-            <Button appearance="secondary" onClick={() => {
-              onOk ? onOk(setState) : setState(false)
-              callback?.(true)
-            }}>{okText || '确认'}</Button>
-            <Button appearance="secondary" style={{ marginLeft: 10 }} onClick={() => {
-              onCancel ? onCancel(setState) : setState(false)
-              callback?.(true)
-            }}>{cancelText || '取消'}</Button>
-          </ConfirmWrapper>}
-        </ModalViewPort>
-        {mask && <ModalMask onClick={() => {
-          if (maskClose) {
-            setState(false)
-            closeCallback?.()
-          }
-        }}></ModalMask>}
-      </ModalWrapper >, container!)
+      return createPortal(
+        <ModalWrapper ref={ref} style={portalStyle}>
+          <ModalViewPort style={style} visible={state} delay={delay!}>
+            <div>
+              {title && <TitleWrapper>{title}</TitleWrapper>}
+              {closeButton && (
+                <CloseBtn>
+                  <Button
+                    style={{ background: '#fff', borderRadius: '5px', padding: '5px' }}
+                    onClick={() => {
+                      setState(false);
+                      closeCallback?.();
+                    }}
+                  >
+                    <Icon icon="closeAlt" />
+                  </Button>
+                </CloseBtn>
+              )}
+            </div>
+            {<ChildrenWrapper>{props.children}</ChildrenWrapper>}
+            {confirm && (
+              <ConfirmWrapper>
+                <Button
+                  appearance="secondary"
+                  onClick={() => {
+                    onOk ? onOk(setState) : setState(false);
+                    callback?.(true);
+                  }}
+                >
+                  {okText || '确认'}
+                </Button>
+                <Button
+                  appearance="secondary"
+                  style={{ marginLeft: 10 }}
+                  onClick={() => {
+                    onCancel ? onCancel(setState) : setState(false);
+                    callback?.(true);
+                  }}
+                >
+                  {cancelText || '取消'}
+                </Button>
+              </ConfirmWrapper>
+            )}
+          </ModalViewPort>
+          {mask && (
+            <ModalMask
+              onClick={() => {
+                if (maskClose) {
+                  setState(false);
+                  closeCallback?.();
+                }
+              }}
+            ></ModalMask>
+          )}
+        </ModalWrapper>,
+        container!,
+      );
     }
   }, [
     callback,
@@ -192,28 +252,28 @@ export function Modal(props: PropsWithChildren<ModalProps>) {
     visible,
     delay,
     unmount,
-  ])
+  ]);
 
-  useStopScroll(visible!, 300, stopScroll)
+  useStopScroll(visible!, 300, stopScroll);
 
   useEffect(() => {
     if (refCallback && ref?.current) {
-      refCallback(ref.current)
+      refCallback(ref.current);
     }
-  }, [refCallback])
+  }, [refCallback]);
 
-  return <>{render}</>
+  return <>{render}</>;
 }
 Modal.defaultProps = {
   visible: false,
   container: document.body,
   title: '标题',
   confirm: true,
-  okText: "确定",
+  okText: '确定',
   cancelText: '取消',
   maskClose: true,
   mask: true,
   closeButton: true,
   delay: 300,
   stopScroll: true,
-}
+};
