@@ -1,9 +1,9 @@
 import React, { PropsWithChildren, ReactNode, useEffect, useMemo, useState } from 'react';
-import styled, { css, keyframes } from 'styled-components';
-import { color, typography } from '../shared/style';
 import ReactDOM, { unmountComponentAtNode } from 'react-dom';
+import styled, { css, keyframes } from 'styled-components';
 import { Icon } from '../icon';
 import { icons } from '../shared/icons';
+import { color, typography } from '../shared/style';
 
 export type MessageType = 'info' | 'success' | 'error' | 'warning' | 'loading' | 'default';
 
@@ -75,8 +75,8 @@ const IconWrapper = styled.span<{ spin?: boolean }>`
   & > svg {
     font-size: ${typography.size.s2}px;
     ${(props) =>
-      props?.spin &&
-      css`
+    props?.spin &&
+    css`
         animation: ${iconSpin} 2s linear infinite;
       `}
   }
@@ -146,18 +146,22 @@ export function Message(props: PropsWithChildren<MessageProps>) {
   const [close, setClose] = useState(false);
 
   const renderIcon = useMemo(() => {
-    if (['default'].includes(iconType)) {
-      return null;
+    let icon: ReactNode | null
+    // default 或者没有这个颜色
+    if (['default'].includes(iconType) || (!IconConfig[iconType]?.color)) {
+      icon = null;
     } else {
-      return (
-        <IconWrapper spin={['loading'].includes(iconType)}>
-          <Icon
-            icon={IconConfig[iconType].icon}
-            color={color[IconConfig[iconType].color as keyof typeof color]}
-          />
-        </IconWrapper>
-      );
+      icon = <Icon
+        icon={IconConfig[iconType].icon}
+        color={color[IconConfig[iconType].color as keyof typeof color]}
+      />
     }
+    return (
+      <IconWrapper spin={['loading'].includes(iconType)}>
+        {icon}
+      </IconWrapper>
+    );
+
   }, [iconType]);
 
   const unmount = useMemo(() => {

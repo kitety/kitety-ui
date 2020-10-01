@@ -1,10 +1,9 @@
+import { fireEvent } from "@testing-library/react";
 import React from "react";
-import { fireEvent, cleanup } from "@testing-library/react";
-import { createMessage, message, Message, MessageType } from "../index";
-import { color, typography } from "../../shared/style";
-import { unmountComponentAtNode, render } from "react-dom";
+import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import Button from "../../button";
+import { createMessage, message, MessageType } from "../index";
 
 let container: HTMLDivElement
 beforeEach(() => {
@@ -110,6 +109,47 @@ describe("test Message component", () => {
       await sleep(2100)
     })
     expect(container).toMatchSnapshot()
+  })
+  it('animate duration', async () => {
+    act(() => {
+      render(<Button id="btn" onClick={() => {
+        message.default(<span className="callback">22</span>, { animationDuring: 1000, delay: 3000 })
+      }}>btn</Button>, container)
+    })
+    const btn = container.querySelector('#btn');
+    await act(async () => {
+      fireEvent.click(btn!)
+      await sleep(2100)
+    })
+    expect(container).toMatchSnapshot()
+    await act(async () => {
+      await sleep(1100)
+    })
+    expect(container).toMatchSnapshot()
 
   })
+  it("animation lg delay", async () => {
+    act(() => {
+      render(
+        <Button
+          id="btn"
+          onClick={() =>
+            message.default(<span className="callback">22</span>, {
+              animationDuring: 2000,
+              delay: 1000,
+            })
+          }
+        >
+          but
+				</Button>,
+        container
+      );
+    });
+    let btn = container.querySelector("#btn");
+    await act(async () => {
+      fireEvent.click(btn!);
+      await sleep(1000);
+    });
+    expect(container).toMatchSnapshot();
+  });
 })

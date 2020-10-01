@@ -1,14 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test Message component callback test 1`] = `
+exports[`test Message component animate duration 1`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
+    >
+      btn
+    </span>
+  </button>
+</div>
+`;
+
+exports[`test Message component animate duration 2`] = `
+<div>
+  <button
+    class="sc-AxiKw darchD"
+    data-testid="button"
+    id="btn"
+  >
+    <span
+      class="sc-AxjAm bsQnfF"
+    >
+      btn
+    </span>
+  </button>
+</div>
+`;
+
+exports[`test Message component animation lg delay 1`] = `
+<div>
+  <button
+    class="sc-AxiKw darchD"
+    data-testid="button"
+    id="btn"
+  >
+    <span
+      class="sc-AxjAm bsQnfF"
+    >
+      but
+    </span>
+  </button>
+</div>
+`;
+
+exports[`test Message component callback test 1`] = `
+<div>
+  <button
+    class="sc-AxiKw darchD"
+    data-testid="button"
+    id="btn"
+  >
+    <span
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -19,12 +67,12 @@ exports[`test Message component callback test 1`] = `
 exports[`test Message component can change icon 1`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -35,12 +83,12 @@ exports[`test Message component can change icon 1`] = `
 exports[`test Message component can change icon 2`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -51,12 +99,12 @@ exports[`test Message component can change icon 2`] = `
 exports[`test Message component can change icon 3`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -67,12 +115,12 @@ exports[`test Message component can change icon 3`] = `
 exports[`test Message component can change icon 4`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -83,12 +131,12 @@ exports[`test Message component can change icon 4`] = `
 exports[`test Message component can change icon 5`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -99,12 +147,28 @@ exports[`test Message component can change icon 5`] = `
 exports[`test Message component can change icon 6`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
+    >
+      btn
+    </span>
+  </button>
+</div>
+`;
+
+exports[`test Message component icon type default 1`] = `
+<div>
+  <button
+    class="sc-AxiKw darchD"
+    data-testid="button"
+    id="btn"
+  >
+    <span
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -115,12 +179,12 @@ exports[`test Message component can change icon 6`] = `
 exports[`test Message component it can change color 1`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -131,12 +195,12 @@ exports[`test Message component it can change color 1`] = `
 exports[`test Message component render basic func 1`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
@@ -147,12 +211,12 @@ exports[`test Message component render basic func 1`] = `
 exports[`test Message component render basic func 2`] = `
 <div>
   <button
-    class="sc-Axmtr fVRJg"
+    class="sc-AxiKw darchD"
     data-testid="button"
     id="btn"
   >
     <span
-      class="sc-AxgMl fnTKIl"
+      class="sc-AxjAm bsQnfF"
     >
       btn
     </span>
