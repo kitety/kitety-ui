@@ -1,17 +1,17 @@
 import axios, { AxiosRequestConfig, CancelTokenSource } from 'axios';
-import { read } from 'fs';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Button, color } from '../..';
+import { Button, color, iconSpin } from '../..';
 import { Icon } from '../icon';
 import { message } from '../message';
 import { Modal } from '../modal';
 import { Progress } from '../progress';
 
+type ProgressBarStatus = 'ready' | 'success' | 'failed' | 'upload';
 interface ProgressBar {
   filename: string;
   percent: number;
-  status: 'ready' | 'success' | 'failed' | 'upload';
+  status: ProgressBarStatus;
   uid: string;
   size: number;
   raw: File | null;
@@ -32,7 +32,7 @@ export type UploadProps = {
   /** 失败回调 */
   failCallback?: ((res: any, i: number) => void) | undefined;
   /** 上传列表初始值 */
-  defaultProgressBar: ProgressBar[];
+  defaultProgressBar?: ProgressBar[];
   /** 如果返回promise，需要提供file，否则同步需要返回boolean，如果为false，则不发送 */
   beforeUpload?: (f: File, i: number) => boolean | Promise<File>;
   /** 上传模式设置 */
@@ -51,6 +51,10 @@ export type UploadProps = {
   accept?: string;
   /** input的multiple属性   multiple为true和max冲突*/
   multiple?: boolean;
+  /** 用户自定义按钮 */
+  customBtn?: ReactNode;
+  /** 开启图片裁剪 */
+  slice?: boolean;
 };
 interface UploadListProps {
   fileList: ProgressBar[];
@@ -65,6 +69,8 @@ type ModalContentType = {
   rotate: number;
   times: number;
   img: HTMLImageElement;
+  left: number;
+  top: number;
 };
 
 const ImgWrapper = styled.div`
@@ -72,6 +78,7 @@ const ImgWrapper = styled.div`
   position: relative;
   width: 104px;
   height: 104px;
+  line-height: 104px;
   margin-right: 8px;
   margin-bottom: 8px;
   text-align: center;
@@ -86,6 +93,7 @@ const ImgWrapper = styled.div`
     height: 100%;
   }
   &:before {
+    left: 0;
     position: absolute;
     z-index: 1;
     width: 100%;
@@ -142,6 +150,28 @@ const ImgUpload = styled.div`
   }
 `;
 
+function chooseProcessListColor(status: ProgressBarStatus) {
+  switch (status) {
+    case 'failed':
+      return color.negative;
+    case 'ready':
+      return color.warning;
+    case 'success':
+      return color.positive;
+    case 'upload':
+      return color.secondary;
+  }
+}
+
+const ProcessListItemName = styled.div<{ status: ProgressBarStatus }>`
+  color: ${(props) => chooseProcessListColor(props.status)};
+`;
+
+export const IconSpin = styled.span`
+  & > svg {
+    animation: ${iconSpin} 2s linear infinite;
+  }
+`;
 export function UploadList(props: UploadListProps) {
   const { fileList, onRemove } = props;
   return (
@@ -149,7 +179,7 @@ export function UploadList(props: UploadListProps) {
       {fileList.map((item) => (
         <ProgressLi key={item.uid}>
           <ProgressListItem>
-            <div>{item.filename}</div>
+            <ProcessListItemName status={item.status}>{item.filename}</ProcessListItemName>
             <div>
               <Button
                 style={{
@@ -160,7 +190,7 @@ export function UploadList(props: UploadListProps) {
                   onRemove(item);
                 }}
               >
-                <Icon icon="close" />
+                <Icon icon="close" color={chooseProcessListColor(item.status)} />
               </Button>
             </div>
           </ProgressListItem>
@@ -170,16 +200,24 @@ export function UploadList(props: UploadListProps) {
     </ul>
   );
 }
+const btnStyle = {
+  padding: '10px',
+};
+const rotateBtnStyle = {
+  padding: '10px',
+  transform: 'rotateY(180deg)',
+};
 export function ImageUploadList(props: ImageListProps) {
   const { onRemove, setFileList, fileList } = props;
   useEffect(() => {
     fileList?.map((item) => {
       if (item.raw && !item.img) {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => {
-          updateFileList(setFileList, item, { img: reader.result || 'error' });
+        //如果有文件并且没有img地址，生成blob地址
+        getBase64(item.raw, (e: string) => {
+          updateFileList(setFileList, item, {
+            img: e || 'error',
+          });
         });
-        reader.readAsDataURL(item.raw);
       }
     });
   }, [fileList, setFileList]);
@@ -188,7 +226,14 @@ export function ImageUploadList(props: ImageListProps) {
       {fileList.map((item) => (
         <span key={item.uid}>
           <ImgWrapper>
-            <img src={item.img as string} alt={item.filename}></img>
+            {item.status === 'success' && <img src={item.img as string} alt="upload img"></img>}
+            {(item.status === 'ready' || item.status === 'upload') && (
+              <IconSpin>
+                <Icon icon="sync" color={color.warning}></Icon>
+              </IconSpin>
+            )}
+            {item.status === 'failed' && <Icon icon="photo" color={color.negative}></Icon>}
+
             <ImgCloseBtn className="closeBtn" onClick={() => onRemove(item)}>
               <Icon icon="trash" color={color.light}></Icon>
             </ImgCloseBtn>
@@ -283,7 +328,8 @@ const resolveFilename = function (uploadFilename: string[] | string, index: numb
 function canvasDraw(modalContent: ModalContentType, canvas: HTMLCanvasElement) {
   const image = modalContent.img;
   const ctx = canvas.getContext('2d');
-  // 清幕
+  // 清屏
+  // eslint-disable-next-line no-self-assign
   canvas.height = canvas.height;
   let imgWidth = image.width;
   let imgHeight = image.height;
@@ -312,6 +358,13 @@ function canvasDraw(modalContent: ModalContentType, canvas: HTMLCanvasElement) {
   ctx?.drawImage(image, startX - midX, startY - midY, imgWidth, imgHeight);
   ctx?.translate(0, 0);
 }
+const getBase64 = (raw: File, callback: Function) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => {
+    callback(reader.result);
+  });
+  reader.readAsDataURL(raw);
+};
 export function Upload(props: UploadProps) {
   const {
     uploadMode,
@@ -328,6 +381,8 @@ export function Upload(props: UploadProps) {
     max,
     accept,
     multiple,
+    customBtn,
+    slice,
   } = props;
   const [fileList, setFileList] = useState<ProgressBar[]>(defaultProgressBar || []);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -337,7 +392,11 @@ export function Upload(props: UploadProps) {
     rotate: 0,
     times: 1,
     img: new Image(),
+    left: 0,
+    top: 0,
   });
+  const [mouseActive, setMouseActive] = useState(false);
+  const [startXY, setStartXY] = useState({ X: 0, Y: 0 });
   const [resCallback, setResCallback] = useState<{ resetFn: Function }>({
     resetFn: () => {},
   });
@@ -415,23 +474,38 @@ export function Upload(props: UploadProps) {
       }
     });
   };
-
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    setMouseActive(true);
+    setStartXY({
+      X: e.clientX - modalContent.left,
+      Y: e.clientY - modalContent.top,
+    });
+  };
+  const handleMouseUp = () => {
+    setMouseActive(false);
+  };
+  const handleMouseLeave = () => {
+    setMouseActive(false);
+  };
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (mouseActive) {
+      let diffX = e.clientX - startXY.X;
+      let diffY = e.clientY - startXY.Y;
+      let newContent = { ...modalContent, left: diffX, top: diffY };
+      setModalContent(newContent);
+      canvasDraw(newContent, canvasRef.current!);
+    }
+  };
   const handleClick = () => {
     inputRef.current?.click();
   };
-  const getBase64 = (raw: File, callback: Function) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => {
-      callback(reader.result);
-    });
-    reader.readAsDataURL(raw);
-  };
+
   const showSlice = useMemo(() => {
-    if (!multiple && uploadMode === 'img') {
+    if (!multiple && uploadMode === 'img' && slice) {
       return true;
     }
     return false;
-  }, [multiple, uploadMode]);
+  }, [multiple, uploadMode, slice]);
   const shouldShow = useMemo(() => {
     if (max !== undefined) {
       return fileList.length < max;
@@ -471,26 +545,19 @@ export function Upload(props: UploadProps) {
         accept={accept}
       />
       {shouldShow && uploadMode === 'default' && (
-        <Button
-          onClick={handleClick}
-          isLoading={resolveBtnLoading(fileList)}
-          loadingText="上传中..."
-        >
-          upload
-        </Button>
+        <span onClick={handleClick}>
+          {customBtn || (
+            <Button isLoading={resolveBtnLoading(fileList)} loadingText="上传中...">
+              upload
+            </Button>
+          )}
+        </span>
       )}
       {shouldShow && uploadMode === 'img' && (
         <ImgUpload onClick={handleClick}>
           <Icon icon="plus" />
         </ImgUpload>
       )}
-      {fileList.map((v) => (
-        <div key={v.uid}>
-          {v.filename}
-          {v.percent}
-          {v.status}
-        </div>
-      ))}
       {uploadMode === 'default' && progress && (
         <UploadList fileList={fileList} onRemove={onRemove} />
       )}
@@ -513,19 +580,81 @@ export function Upload(props: UploadProps) {
           setModalContent({ ...modalContent, rotate: 0, times: 1 });
         }}
       >
-        <div>
+        <div
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+        >
           <canvas
+            style={{
+              width: '100%',
+              height: '100%',
+              border: '1px dashed #ff4785',
+            }}
             width="300"
             height="340"
-            style={{ height: '100%', width: '100%' }}
             ref={canvasRef}
-          ></canvas>
+          >
+            您的浏览器不支持Canvas
+          </canvas>
         </div>
         <div>
-          <Button>放大</Button>
-          <Button>缩小</Button>
-          <Button>左旋</Button>
-          <Button>右旋</Button>
+          <Button
+            style={btnStyle}
+            appearance="primary"
+            onClick={() => {
+              let newContent = { ...modalContent, ...{ times: modalContent.times + 0.1 } };
+              setModalContent(newContent);
+              canvasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="zoom" color={color.light}></Icon>
+          </Button>
+          <Button
+            style={btnStyle}
+            appearance="primary"
+            onClick={() => {
+              let newContent = { ...modalContent, ...{ times: modalContent.times - 0.1 } };
+              setModalContent(newContent);
+              canvasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="zoomout" color={color.light}></Icon>
+          </Button>
+          <Button
+            style={btnStyle}
+            appearance="primary"
+            onClick={() => {
+              let newContent = { ...modalContent, ...{ rotate: modalContent.rotate - 0.1 } };
+              setModalContent(newContent);
+              canvasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="undo" color={color.light}></Icon>
+          </Button>
+          <Button
+            style={rotateBtnStyle}
+            appearance="primary"
+            onClick={() => {
+              let newContent = { ...modalContent, ...{ rotate: modalContent.rotate + 0.1 } };
+              setModalContent(newContent);
+              canvasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="undo" color={color.light}></Icon>
+          </Button>
+          <Button
+            style={btnStyle}
+            appearance="primary"
+            onClick={() => {
+              let newContent = { ...modalContent, rotate: 0, times: 1, left: 0, top: 0 };
+              setModalContent(newContent);
+              canvasDraw(newContent, canvasRef.current!);
+            }}
+          >
+            <Icon icon="zoomreset" color={color.light}></Icon>
+          </Button>
         </div>
       </Modal>
     </div>
@@ -533,6 +662,7 @@ export function Upload(props: UploadProps) {
 }
 Upload.defaultProps = {
   axiosConfig: {},
+  uploadMode: 'default',
   uploadFilename: 'avatar',
   successCallback: () => message.success('上传成功'),
   failCallback: () => message.error('上传失败'),
